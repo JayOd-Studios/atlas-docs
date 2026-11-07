@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deploy your first app — Atlas Docs</title>
+<meta name="description" content="A sample developer documentation site: searchable navigation, tabbed install, code blocks and versioned pages. Fictional product, built as a portfolio template by JayOd Studios.">
+<meta name="theme-color" content="#ffffff">
+<script>
+  /* Set the theme before the first paint, exactly like a real docs site should. */
+  (function () {
+    try {
+      var saved = localStorage.getItem("atlas-theme");
+      var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (dark) document.documentElement.setAttribute("data-theme", "dark");
+    } catch (error) {}
+  })();
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f46e5'/%3E%3Cpath d='M9 23 16 8l7 15' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="sidebar">
+    <span class="bars" aria-hidden="true"></span><span class="sr">Browse docs</span>
+  </button>
+
+  <a class="brand" href="#deploy">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19 12 5l8 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    <span>Atlas</span>
+    <span class="brand-tag">Docs</span>
+  </a>
+
+  <nav class="topnav" aria-label="Documentation">
+    <a href="#deploy" aria-current="page" data-page-link="deploy">Guides</a>
+    <a href="#errors" data-page-link="errors">API reference</a>
+    <a href="#errors" data-page-link="errors">Changelog</a>
+  </nav>
+
+  <div class="tools">
+    <span class="version" title="Current version">v2.4</span>
+    <button class="icon-btn" id="themeBtn" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="moon"><path d="M20 14.4A8.2 8.2 0 0 1 9.6 4 8.4 8.4 0 1 0 20 14.4Z"/></svg>
+      <span class="sr">Switch to dark mode</span>
+    </button>
+    <a class="dash" href="#deploy">Dashboard <span aria-hidden="true">↗</span></a>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" aria-label="Docs navigation">
+    <label class="search">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="m13 13 4 4"/></svg>
+      <span class="sr">Search documentation</span>
+      <input type="search" id="q" placeholder="Search docs" autocomplete="off">
+    </label>
+
+    <nav id="sideNav">
+      <p class="group">Getting started</p>
+      <a href="#deploy" data-page="deploy" aria-current="page">Deploy your first app</a>
+      <a href="#install" data-page="install">Install the CLI</a>
+
+      <p class="group">Guides</p>
+      <a href="#deploy" data-page="deploy">Regions</a>
+      <a href="#deploy" data-page="deploy">Environment variables</a>
+      <a href="#deploy" data-page="deploy">Custom domains</a>
+      <a href="#deploy" data-page="deploy">Webhooks</a>
+
+      <p class="group">API reference</p>
+      <a href="#deploy" data-page="deploy">atlas.deploy()</a>
+      <a href="#errors" data-page="errors">Errors</a>
+      <a href="#errors" data-page="errors">Rate limits</a>
+
+      <p class="group">More</p>
+      <a href="#errors" data-page="errors">Changelog</a>
+      <a href="#errors" data-page="errors">Status</a>
+    </nav>
+
+    <p class="no-results" id="noResults" hidden>No pages match “<span id="noTerm"></span>”.</p>
+
+    <div class="side-foot">
+      <p><span class="status-dot" aria-hidden="true"></span> All systems operational</p>
+      <p class="small">Atlas CLI v2.4.1 · MIT</p>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <main id="main">
+    <!-- Deployment guide -->
+    <article class="doc" data-article="deploy" id="deploy">
+      <div class="doc-body">
+        <p class="crumbs">Docs <span aria-hidden="true">/</span> Getting started</p>
+        <h1>Deploy your first app</h1>
+        <p class="lede">One command ships a build to the region you name, then keeps the previous release live until traffic moves. This guide takes about four minutes from an empty directory.</p>
+
+        <div class="note">
+          <p><strong>Before you start.</strong> You need an Atlas account, a project directory with a build script, and Node 20 or newer. Nothing else — no Docker, no config file.</p>
+        </div>
+
+        <h2 id="prerequisites">Prerequisites</h2>
+        <ul>
+          <li>Node.js 20 or later — <code>node --version</code> should print <code>v20</code> or higher.</li>
+          <li>A project with a build script. Atlas runs it, then uploads the output directory.</li>
+          <li>An API token: <code>atlas login</code> stores one in your keychain.</li>
+        </ul>
+
+        <h2 id="run-deploy">Run the deploy</h2>
+        <p>From the project root, name the region you want traffic served from. Atlas uses the nearest region by default if you leave it out.</p>
+
+        <ol class="steps">
+          <li>
+            <h3>Authenticate once</h3>
+            <div class="code" data-code>
+              <div class="code-head"><span class="code-lang">shell</span><button class="copy" type="button" data-copy>Copy</button></div>
+              <pre><code>atlas login</code></pre>
+            </div>
+          </li>
+          <li>
+            <h3>Deploy</h3>
+            <div class="code" data-code>
+              <div class="code-head"><span class="code-lang">shell</span><button class="copy" type="button" data-copy>Copy</button></div>
+              <pre><code>atlas deploy --region <span class="tok-s">"eu-west"</span> --prod</code></pre>
+            </div>
+            <p>Add <code>--dry-run</code> to print the change set without shipping it. The flag is safe to use in CI.</p>
+          </li>
+          <li>
+            <h3>Watch traffic move</h3>
+            <p>Atlas keeps the previous release at 100% until the new one passes its readiness check, then moves it over in under ten seconds. The old release stays addressable for rollback.</p>
+          </li>
+        </ol>
+
+        <h2 id="flags">Flags</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Flag</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td><code>--region</code></td><td>string</td><td>nearest</td><td>Region that serves the deployment.</td></tr>
+              <tr><td><code>--prod</code></td><td>boolean</td><td>false</td><td>Promotes the release to production traffic.</td></tr>
+              <tr><td><code>--dry-run</code></td><td>boolean</td><td>false</td><td>Prints the change set and exits.</td></tr>
+              <tr><td><code>--env</code></td><td>string</td><td>production</td><td>Environment name for scoped variables.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="verify">Verify the deployment</h2>
+        <p>A successful deploy prints the release ID and the URL. Check the release is live before you point a domain at it:</p>
+
+        <div class="code" data-code>
+          <div class="code-head"><span class="code-lang">shell</span><button class="copy" type="button" data-copy>Copy</button></div>
+          <pre><code>atlas releases list --limit <span class="tok-n">3</span>
+
+<span class="tok-c"># RELEASE   REGION    STATUS     CREATED</span>
+rel_8f21c   eu-west   <span class="tok-ok">live</span>       12s ago
+rel_71ba0   eu-west   retired    6m ago</code></pre>
+        </div>
+
+        <div class="note ok">
+          <p><strong>That is it.</strong> The next guide covers environment variables, previews and rollbacks. If a deploy fails, the error page lists every exit code and what to do about it.</p>
+        </div>
+
+        <nav class="pager" aria-label="Guide pagination">
+          <a href="#install" data-page="install"><span class="pager-dir">← Previous</span><span class="pager-title">Install the CLI</span></a>
+          <a href="#errors" class="next" data-page="errors"><span class="pager-dir">Next →</span><span class="pager-title">Errors</span></a>
+        </nav>
+
+        <div class="helpful" role="group" aria-label="Was this page helpful?">
+          <p>Was this page helpful?</p>
+          <div><button type="button" class="thumb" data-helpful="yes">Yes</button><button type="button" class="thumb" data-helpful="no">No</button></div>
+          <p class="thanks" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <a href="#prerequisites">Prerequisites</a>
+        <a href="#run-deploy">Run the deploy</a>
+        <a href="#flags">Flags</a>
+        <a href="#verify">Verify the deployment</a>
+      </aside>
+    </article>
+
+    <!-- Install guide -->
+    <article class="doc" data-article="install" id="install" hidden>
+      <div class="doc-body">
+        <p class="crumbs">Docs <span aria-hidden="true">/</span> Getting started</p>
+        <h1>Install the CLI</h1>
+        <p class="lede">The Atlas CLI is one binary with no runtime dependencies. Install it with the package manager you already use, or download a signed build.</p>
+
+        <h2 id="package">Install with a package manager</h2>
+        <div class="code tabs" data-code>
+          <div class="code-head">
+            <div class="tab-row" role="tablist" aria-label="Package manager">
+              <button class="tab" type="button" role="tab" aria-selected="true" data-lang="npm">npm</button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-lang="pnpm">pnpm</button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-lang="bun">bun</button>
+            </div>
+            <button class="copy" type="button" data-copy>Copy</button>
+          </div>
+          <pre><code data-panel="npm">npm install --global @atlas/cli</code><code data-panel="pnpm" hidden>pnpm add --global @atlas/cli</code><code data-panel="bun" hidden>bun add --global @atlas/cli</code></pre>
+        </div>
+
+        <h2 id="requirements">Requirements</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Item</th><th scope="col">Minimum</th><th scope="col">Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Node.js</td><td>20</td><td>Only needed for project builds, not the CLI itself.</td></tr>
+              <tr><td>macOS</td><td>13</td><td>Apple silicon and Intel builds.</td></tr>
+              <tr><td>Linux</td><td>glibc 2.31</td><td>x86_64 and arm64.</td></tr>
+              <tr><td>Windows</td><td>10</td><td>WSL2 recommended for build scripts.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="verify-install">Verify the install</h2>
+        <div class="code" data-code>
+          <div class="code-head"><span class="code-lang">shell</span><button class="copy" type="button" data-copy>Copy</button></div>
+          <pre><code>atlas --version
+<span class="tok-c"># 2.4.1</span></code></pre>
+        </div>
+
+        <div class="note">
+          <p><strong>Command not found?</strong> The global bin directory may not be on your <code>PATH</code>. Run <code>npm bin -g</code> and add the printed path to your shell profile, then open a new terminal.</p>
+        </div>
+
+        <nav class="pager" aria-label="Guide pagination">
+          <a href="#deploy" data-page="deploy"><span class="pager-dir">← Previous</span><span class="pager-title">Deploy your first app</span></a>
+          <a href="#errors" class="next" data-page="errors"><span class="pager-dir">Next →</span><span class="pager-title">Errors</span></a>
+        </nav>
+
+        <div class="helpful" role="group" aria-label="Was this page helpful?">
+          <p>Was this page helpful?</p>
+          <div><button type="button" class="thumb" data-helpful="yes">Yes</button><button type="button" class="thumb" data-helpful="no">No</button></div>
+          <p class="thanks" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <a href="#package">Install with a package manager</a>
+        <a href="#requirements">Requirements</a>
+        <a href="#verify-install">Verify the install</a>
+      </aside>
+    </article>
+
+    <!-- Errors -->
+    <article class="doc" data-article="errors" id="errors" hidden>
+      <div class="doc-body">
+        <p class="crumbs">Docs <span aria-hidden="true">/</span> API reference</p>
+        <h1>Errors</h1>
+        <p class="lede">Every failed request returns a JSON body with a code, a message and a request ID. Fix the cause using the table below; quote the request ID if you open a support ticket.</p>
+
+        <h2 id="response">The error body</h2>
+        <div class="code" data-code>
+          <div class="code-head"><span class="code-lang">json</span><button class="copy" type="button" data-copy>Copy</button></div>
+          <pre><code>{
+  <span class="tok-k">"error"</span>: {
+    <span class="tok-k">"code"</span>: <span class="tok-s">"ATL-422"</span>,
+    <span class="tok-k">"message"</span>: <span class="tok-s">"No build output found at dist/."</span>,
+    <span class="tok-k">"requestId"</span>: <span class="tok-s">"req_9c41d2"</span>
+  }
+}</code></pre>
+        </div>
+
+        <h2 id="codes">Error codes</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Code</th><th scope="col">Means</th><th scope="col">Fix</th></tr></thead>
+            <tbody>
+              <tr><td><code>ATL-401</code></td><td>Missing or expired token.</td><td>Run <code>atlas login</code> again. Tokens last 30 days.</td></tr>
+              <tr><td><code>ATL-409</code></td><td>A deploy is already in progress.</td><td>Wait for it to finish, or pass <code>--force</code> to supersede it.</td></tr>
+              <tr><td><code>ATL-422</code></td><td>The build output directory is missing or empty.</td><td>Check the build script, and that <code>dist/</code> exists after it runs.</td></tr>
+              <tr><td><code>ATL-429</code></td><td>Rate limit reached.</td><td>Back off using the <code>Retry-After</code> header. Limit is 60 deploys an hour.</td></tr>
+              <tr><td><code>ATL-503</code></td><td>Region unavailable.</td><td>Retry once, then deploy to another region.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="exit-codes">CLI exit codes</h2>
+        <p>Scripts can branch on these without parsing output:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Exit</th><th scope="col">Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>0</code></td><td>Success — release is live.</td></tr>
+              <tr><td><code>1</code></td><td>Build failed. Read the build log, not the JSON body.</td></tr>
+              <tr><td><code>2</code></td><td>Invalid flags or missing config.</td></tr>
+              <tr><td><code>3</code></td><td>Authentication failure.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          <p><strong>A note on retries.</strong> Retry only <code>ATL-503</code> and <code>ATL-429</code>, and only with a fresh request ID. Retrying a <code>ATL-422</code> just burns your rate limit — the build output will still be missing.</p>
+        </div>
+
+        <nav class="pager" aria-label="Guide pagination">
+          <a href="#deploy" data-page="deploy"><span class="pager-dir">← Previous</span><span class="pager-title">Deploy your first app</span></a>
+          <a href="#install" class="next" data-page="install"><span class="pager-dir">Next →</span><span class="pager-title">Install the CLI</span></a>
+        </nav>
+
+        <div class="helpful" role="group" aria-label="Was this page helpful?">
+          <p>Was this page helpful?</p>
+          <div><button type="button" class="thumb" data-helpful="yes">Yes</button><button type="button" class="thumb" data-helpful="no">No</button></div>
+          <p class="thanks" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <a href="#response">The error body</a>
+        <a href="#codes">Error codes</a>
+        <a href="#exit-codes">CLI exit codes</a>
+      </aside>
+    </article>
+
+    <footer class="doc-foot">
+      <p>Sample project — Atlas is fictional. A portfolio template by JayOd Studios.</p>
+      <div><a href="#errors">Edit this page</a><a href="#errors">Report an issue</a></div>
+    </footer>
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
