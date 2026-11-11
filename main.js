@@ -232,6 +232,33 @@
     });
   });
 
+  /* ---------- Keyboard access for scrolling tables ---------- */
+
+  var tableWraps = Array.prototype.slice.call(document.querySelectorAll(".table-wrap"));
+  tableWraps.forEach(function (wrap) {
+    wrap.setAttribute("role", "region");
+    var heading = wrap.previousElementSibling;
+    var label = heading && /^H[2-4]$/.test(heading.tagName) ? heading.textContent.trim() : "Documentation";
+    wrap.setAttribute("aria-label", label + " table");
+  });
+
+  function syncTableRegions() {
+    tableWraps.forEach(function (wrap) {
+      if (wrap.scrollWidth > wrap.clientWidth + 1) {
+        wrap.setAttribute("tabindex", "0");
+      } else {
+        wrap.removeAttribute("tabindex");
+      }
+    });
+  }
+
+  syncTableRegions();
+  window.addEventListener("resize", syncTableRegions);
+  window.addEventListener("hashchange", syncTableRegions);
+  document.addEventListener("click", function (event) {
+    if (event.target.closest("[data-page]")) window.requestAnimationFrame(syncTableRegions);
+  });
+
   /* Each GitHub Pages deploy is a standalone sample, so there is no gallery to return to. */
   if (location.hostname.endsWith(".github.io")) {
     var galleryLink = document.querySelector(".back-gallery");

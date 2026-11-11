@@ -244,7 +244,7 @@ svg { display: block; }
   color: var(--muted);
 }
 .side-foot p { display: flex; align-items: center; gap: 7px; }
-.side-foot .small { font-size: 11.5px; color: var(--muted); opacity: 0.8; }
+.side-foot .small { font-size: 11.5px; color: var(--muted); }
 .status-dot {
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--ok);
@@ -406,7 +406,7 @@ pre code {
 .tok-s { color: #a7f3d0; }
 .tok-k { color: #93c5fd; }
 .tok-n { color: #fcd34d; }
-.tok-c { color: #64748b; }
+.tok-c { color: #94a3b8; }
 .tok-ok { color: #6ee7b7; }
 
 /* Tabs */
